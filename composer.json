@@ -1,0 +1,14 @@
+{
+    "name": "catchdigital/salesforce_rest",
+    "description": "A Drupal module that provides RESTFUL querying capabilities to Salesforce.",
+    "type": "drupal-module",
+    "require": {
+        "symfony/property-access": "^4.2"
+    },
+    "authors": [
+        {
+            "name": "Ken Mortimer",
+            "email": "k.mortimer@catchdigital.com"
+        }
+    ]
+}
