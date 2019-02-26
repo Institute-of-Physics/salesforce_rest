@@ -1,0 +1,5 @@
+name: Salesforce REST
+type: module
+description: A Drupal module that provides RESTFUL querying capabilities to Salesforce.
+core: 8.x
+package: Catch Digital

@@ -5,6 +5,10 @@
     "require": {
         "symfony/property-access": "^4.2"
     },
+    "require-dev": {
+        "drupal/core": "^8.0"
+    },
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Ken Mortimer",

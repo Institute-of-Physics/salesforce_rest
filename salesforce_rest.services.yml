@@ -1,0 +1,26 @@
+services:
+  salesforce_rest.services.query.request_factory:
+    class: \Drupal\salesforce_rest\Services\Query\RequestFactory
+    arguments:
+      - '@salesforce_rest.services.rest_client'
+  salesforce_rest.services.rest_client:
+    class: \Drupal\salesforce_rest\Services\RestClient
+    arguments:
+      - '@salesforce_rest.config.rest_client'
+      - '@salesforce_rest.cache'
+      - '@salesforce_rest.logger'
+    private: true
+  salesforce_rest.config.rest_client:
+    class: \Drupal\salesforce_rest\Config\Config
+    arguments: ['@config.factory', '@salesforce_rest.logger']
+    calls:
+      - [createConfig, [salesforce_rest, rest_client]]
+  salesforce_rest.cache:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+    - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [salesforce_rest]
+  salesforce_rest.logger:
+    parent: logger.channel_base
+    arguments: [salesforce_rest]
