@@ -2,6 +2,8 @@
 
 namespace Drupal\salesforce_rest\Services\Query;
 
+use \Symfony\Component\HttpFoundation\Request;
+
 final class FuzzyRequest extends RequestAbstract {
 
   use ObjectRequestTrait {
@@ -19,7 +21,7 @@ final class FuzzyRequest extends RequestAbstract {
    * {@inheritdoc}
    */
   public function getMethod(): string {
-    return 'GET';
+    return Request::METHOD_GET;
   }
 
   /**

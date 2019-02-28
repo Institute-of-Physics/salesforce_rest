@@ -2,6 +2,8 @@
 
 namespace Drupal\salesforce_rest\Services\Query;
 
+use \Symfony\Component\HttpFoundation\Request;
+
 final class UpdateRequest extends RequestAbstract {
 
   use ObjectRequestTrait {
@@ -16,7 +18,7 @@ final class UpdateRequest extends RequestAbstract {
    * {@inheritdoc}
    */
   public function getMethod(): string {
-    return 'PATCH';
+    return Request::METHOD_PATCH;
   }
 
   /**

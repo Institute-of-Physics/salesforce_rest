@@ -2,6 +2,8 @@
 
 namespace Drupal\salesforce_rest\Services\Query;
 
+use \Symfony\Component\HttpFoundation\Request;
+
 final class SelectRequest extends RequestAbstract {
 
   use ObjectRequestTrait {
@@ -16,7 +18,7 @@ final class SelectRequest extends RequestAbstract {
    * {@inheritdoc}
    */
   public function getMethod(): string {
-    return 'GET';
+    return Request::METHOD_GET;
   }
 
   /**

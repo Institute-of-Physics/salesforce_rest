@@ -29,7 +29,7 @@ final class RequestFactory {
    * @return \Drupal\salesforce_rest\Services\Query\SelectRequest
    */
   public function createSelectRequest(): SelectRequest {
-    return NativeRequest::create($this->restClient);
+    return SelectRequest::create($this->restClient);
   }
 
   /**
