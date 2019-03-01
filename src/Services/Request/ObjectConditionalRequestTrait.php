@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\salesforce_rest\Services\Query;
+namespace Drupal\salesforce_rest\Services\Request;
 
 trait ObjectConditionalRequestTrait {
 
@@ -27,7 +27,7 @@ trait ObjectConditionalRequestTrait {
   /**
    * @param array $objectConditions
    *
-   * @return \Drupal\salesforce_rest\Services\Query\ObjectConditionalRequestTrait
+   * @return \Drupal\salesforce_rest\Services\Request\ObjectConditionalRequestTrait
    * @throws \Exception
    */
   public function setObjectConditions(array $objectConditions): self {

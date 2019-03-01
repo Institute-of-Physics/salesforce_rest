@@ -1,7 +1,13 @@
 <?php
 
-namespace Drupal\salesforce_rest\Services\Query;
+namespace Drupal\salesforce_rest\Services\Request\Types;
 
+use \Drupal\salesforce_rest\Services\Request\Contracts\PostRequestInterface;
+use \Drupal\salesforce_rest\Services\Request\{
+  RequestAbstract,
+  ObjectRequestTrait,
+  ObjectWriteRequestTrait,
+};
 use \Symfony\Component\HttpFoundation\Request;
 
 final class UpdateRequest extends RequestAbstract implements PostRequestInterface {
@@ -36,10 +42,17 @@ final class UpdateRequest extends RequestAbstract implements PostRequestInterfac
    * {@inheritdoc}
    */
   public function getBody(): array {
-    if (empty($this->getObjectFieldValues())) {
-      throw new \Exception("The object's field values must be set.");
-    }
     return $this->getObjectFieldValues();
+  }
+
+  /**
+   * @return bool
+   */
+  public function hasBody(): bool {
+    if (!empty($this->getObjectFieldValues())) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
 }

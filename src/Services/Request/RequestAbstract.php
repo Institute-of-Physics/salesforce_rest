@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\salesforce_rest\Services\Query;
+namespace Drupal\salesforce_rest\Services\Request;
 
 use \Drupal\salesforce_rest\Services\RestClient;
 
@@ -21,19 +21,19 @@ abstract class RequestAbstract {
   /**
    * @param \Drupal\salesforce_rest\Services\RestClient $restClient
    *
-   * @return \Drupal\salesforce_rest\Services\Query\RequestAbstract
+   * @return \Drupal\salesforce_rest\Services\Request\RequestAbstract
    */
   public static function create(RestClient $restClient): RequestAbstract {
     return new static($restClient);
   }
 
   /**
-   * @return RequestResponse
+   * @return \Drupal\salesforce_rest\Services\Request\Response
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function execute(): RequestResponse {
+  public function execute(): Response {
     $response = $this->restClient->request($this);
-    return new RequestResponse($response);
+    return new Response($response);
   }
 
   /**

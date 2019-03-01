@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\salesforce_rest\Services\Query;
+namespace Drupal\salesforce_rest\Services\Request;
 
 trait ObjectWriteRequestTrait {
 
@@ -19,7 +19,7 @@ trait ObjectWriteRequestTrait {
   /**
    * @param array $objectFieldValues
    *
-   * @return \Drupal\salesforce_rest\Services\Query\ObjectWriteRequestTrait
+   * @return \Drupal\salesforce_rest\Services\Request\ObjectWriteRequestTrait
    */
   public function setObjectFieldValues(array $objectFieldValues): self {
     $this->objectFieldValues = $objectFieldValues;

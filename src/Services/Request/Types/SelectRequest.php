@@ -1,7 +1,13 @@
 <?php
 
-namespace Drupal\salesforce_rest\Services\Query;
+namespace Drupal\salesforce_rest\Services\Request\Types;
 
+use \Drupal\salesforce_rest\Services\Request\Contracts\GetRequestInterface;
+use \Drupal\salesforce_rest\Services\Request\{
+  RequestAbstract,
+  ObjectRequestTrait,
+  ObjectReadRequestTrait,
+};
 use \Symfony\Component\HttpFoundation\Request;
 
 final class SelectRequest extends RequestAbstract implements GetRequestInterface {
@@ -36,12 +42,19 @@ final class SelectRequest extends RequestAbstract implements GetRequestInterface
    * {@inheritdoc}
    */
   public function getParams(): array {
-    if (empty($this->getObjectFields())) {
-      throw new \Exception("The object's fields must be set.");
-    }
     return [
       'fields' => implode(',', $this->getObjectFields()),
     ];
+  }
+
+  /**
+   * @return bool
+   */
+  public function hasParams(): bool {
+    if (!empty($this->getObjectFields())) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
 }

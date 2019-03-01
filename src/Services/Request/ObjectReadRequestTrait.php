@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\salesforce_rest\Services\Query;
+namespace Drupal\salesforce_rest\Services\Request;
 
 trait ObjectReadRequestTrait {
 
@@ -19,7 +19,7 @@ trait ObjectReadRequestTrait {
   /**
    * @param array $objectFields
    *
-   * @return \Drupal\salesforce_rest\Services\Query\ObjectReadRequestTrait
+   * @return \Drupal\salesforce_rest\Services\Request\ObjectReadRequestTrait
    */
   public function setObjectFields(array $objectFields): self {
     $this->objectFields = $objectFields;

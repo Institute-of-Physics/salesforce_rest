@@ -1,6 +1,6 @@
 services:
   salesforce_rest.services.query.request_factory:
-    class: \Drupal\salesforce_rest\Services\Query\RequestFactory
+    class: \Drupal\salesforce_rest\Services\Request\RequestFactory
     arguments:
       - '@salesforce_rest.services.rest_client'
   salesforce_rest.services.rest_client:

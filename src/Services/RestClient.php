@@ -5,9 +5,11 @@ namespace Drupal\salesforce_rest\Services;
 use \Drupal\Core\Cache\CacheBackendInterface;
 use \Drupal\Core\Logger\LoggerChannelInterface;
 use \Drupal\salesforce_rest\Config\Config;
-use \Drupal\salesforce_rest\Services\Query\GetRequestInterface;
-use \Drupal\salesforce_rest\Services\Query\PostRequestInterface;
-use \Drupal\salesforce_rest\Services\Query\RequestAbstract;
+use \Drupal\salesforce_rest\Services\Request\{
+  RequestAbstract,
+  Contracts\GetRequestInterface,
+  Contracts\PostRequestInterface,
+};
 use \Drupal\salesforce_rest\Session\AccessToken;
 use \Symfony\Component\HttpKernel\Exception\HttpException;
 use \Symfony\Component\HttpFoundation\Response;
@@ -119,7 +121,7 @@ class RestClient {
   }
 
   /**
-   * @param \Drupal\salesforce_rest\Services\Query\RequestAbstract $request
+   * @param \Drupal\salesforce_rest\Services\Request\RequestAbstract $request
    *
    * @return string
    * @throws \GuzzleHttp\Exception\GuzzleException
@@ -127,9 +129,11 @@ class RestClient {
   public function request(RequestAbstract $request): string {
     try {
       $requestData = [];
-      if ($request instanceof GetRequestInterface) {
+      if ($request instanceof GetRequestInterface &&
+        $request->hasParams()) {
         $requestData['query'] = $request->getParams();
-      } else if ($request instanceof PostRequestInterface) {
+      } else if ($request instanceof PostRequestInterface &&
+        $request->hasBody()) {
         $requestData['json'] = $request->getBody();
       }
       $response = $this->getClient()

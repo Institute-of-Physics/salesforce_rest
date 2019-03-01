@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\salesforce_rest\Services\Query;
+namespace Drupal\salesforce_rest\Services\Request;
 
 use \Drupal\salesforce_rest\Contracts\ImmutableInterface;
 use \Symfony\Component\PropertyAccess\PropertyAccess;
 
-final class RequestResponse implements ImmutableInterface {
+final class Response implements ImmutableInterface {
 
   /**
    * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface

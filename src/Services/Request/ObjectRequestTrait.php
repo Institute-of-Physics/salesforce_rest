@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\salesforce_rest\Services\Query;
+namespace Drupal\salesforce_rest\Services\Request;
 
 trait ObjectRequestTrait {
 
@@ -24,7 +24,7 @@ trait ObjectRequestTrait {
   /**
    * @param string $objectType
    *
-   * @return \Drupal\salesforce_rest\Services\Query\ObjectRequestTrait
+   * @return \Drupal\salesforce_rest\Services\Request\ObjectRequestTrait
    */
   public function setObjectType(string $objectType): self {
     $this->objectType = $objectType;
@@ -41,7 +41,7 @@ trait ObjectRequestTrait {
   /**
    * @param string $objectId
    *
-   * @return \Drupal\salesforce_rest\Services\Query\ObjectRequestTrait
+   * @return \Drupal\salesforce_rest\Services\Request\ObjectRequestTrait
    */
   public function setObjectId(string $objectId): self {
     $this->objectId = $objectId;
