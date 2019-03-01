@@ -24,12 +24,39 @@ $config['rest_client']['api_version'] = ''
 ## Usage
 
 ```
+// A SELECT request query with conditionals.
 $requestFactory = \Drupal::service('salesforce_rest.services.query.request_factory');
 $fuzzyRequest = $requestFactory->createFuzzyRequest();
 
 $fuzzyRequest->setType('User');
 $fuzzyRequest->setFields(['Id']);
+$fuzzyRequest->setConditions([
+    'AND' => [
+        ['field', 'operator', 'value'],
+    ],
+]);
 
 $requestResponse = $fuzzyRequest->execute();
 
+// A SELECT request query using an Id.
+$requestFactory = \Drupal::service('salesforce_rest.services.query.request_factory');
+$selectRequest = $requestFactory->createSelectRequest();
+
+$selectRequest->setType('User');
+$selectRequest->setId(1);
+$selectRequest->setFields(['Id']);
+
+$requestResponse = $selectRequest->execute();
+
+// An UPDATE request query using an Id.
+$requestFactory = \Drupal::service('salesforce_rest.services.query.request_factory');
+$updateRequest = $requestFactory->createUpdateRequest();
+
+$updateRequest->setType('User');
+$updateRequest->setId(1);
+$updateRequest->setFieldValues([
+    'field' => 'value',
+]);
+
+$requestResponse = $updateRequest->execute();
 ```
