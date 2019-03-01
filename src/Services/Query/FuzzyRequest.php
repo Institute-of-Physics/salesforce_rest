@@ -4,7 +4,7 @@ namespace Drupal\salesforce_rest\Services\Query;
 
 use \Symfony\Component\HttpFoundation\Request;
 
-final class FuzzyRequest extends RequestAbstract {
+final class FuzzyRequest extends RequestAbstract implements GetRequestInterface {
 
   use ObjectRequestTrait {
     ObjectRequestTrait::setObjectId as setId;
@@ -57,13 +57,6 @@ final class FuzzyRequest extends RequestAbstract {
     return [
       'q' => implode(' ', $query)
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBody(): array {
-    return [];
   }
 
 }

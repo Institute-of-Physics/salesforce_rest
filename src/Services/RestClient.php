@@ -5,6 +5,8 @@ namespace Drupal\salesforce_rest\Services;
 use \Drupal\Core\Cache\CacheBackendInterface;
 use \Drupal\Core\Logger\LoggerChannelInterface;
 use \Drupal\salesforce_rest\Config\Config;
+use \Drupal\salesforce_rest\Services\Query\GetRequestInterface;
+use \Drupal\salesforce_rest\Services\Query\PostRequestInterface;
 use \Drupal\salesforce_rest\Services\Query\RequestAbstract;
 use \Drupal\salesforce_rest\Session\AccessToken;
 use \Symfony\Component\HttpKernel\Exception\HttpException;
@@ -124,14 +126,17 @@ class RestClient {
    */
   public function request(RequestAbstract $request): string {
     try {
+      $requestData = [];
+      if ($request instanceof GetRequestInterface) {
+        $requestData['query'] = $request->getParams();
+      } else if ($request instanceof PostRequestInterface) {
+        $requestData['json'] = $request->getBody();
+      }
       $response = $this->getClient()
         ->request(
           $request->getMethod(),
           $this->getApiEndpoint() . $request->getUri(),
-          [
-            'query' => $request->getParams(),
-            'json' => $request->getBody(),
-          ]
+          $requestData
         );
       if (!in_array($response->getStatusCode(), [
         Response::HTTP_OK,

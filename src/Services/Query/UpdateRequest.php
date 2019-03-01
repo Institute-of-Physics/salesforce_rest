@@ -4,7 +4,7 @@ namespace Drupal\salesforce_rest\Services\Query;
 
 use \Symfony\Component\HttpFoundation\Request;
 
-final class UpdateRequest extends RequestAbstract {
+final class UpdateRequest extends RequestAbstract implements PostRequestInterface {
 
   use ObjectRequestTrait {
     ObjectRequestTrait::setObjectId as setId;
@@ -30,13 +30,6 @@ final class UpdateRequest extends RequestAbstract {
       throw new \Exception("The object type and/or Id must be set.");
     }
     return "/sobjects/{$this->getObjectType()}/{$this->getObjectId()}";
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getParams(): array {
-    return [];
   }
 
   /**

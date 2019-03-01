@@ -4,7 +4,7 @@ namespace Drupal\salesforce_rest\Services\Query;
 
 use \Symfony\Component\HttpFoundation\Request;
 
-final class SelectRequest extends RequestAbstract {
+final class SelectRequest extends RequestAbstract implements GetRequestInterface {
 
   use ObjectRequestTrait {
     ObjectRequestTrait::setObjectId as setId;
@@ -42,13 +42,6 @@ final class SelectRequest extends RequestAbstract {
     return [
       'fields' => implode(',', $this->getObjectFields()),
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getBody(): array {
-    return [];
   }
 
 }

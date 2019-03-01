@@ -46,14 +46,4 @@ abstract class RequestAbstract {
    */
   abstract public function getUri(): string;
 
-  /**
-   * @return array
-   */
-  abstract public function getParams(): array;
-
-  /**
-   * @return array
-   */
-  abstract public function getBody(): array;
-
 }
