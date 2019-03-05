@@ -31,10 +31,6 @@ final class SelectRequest extends RequestAbstract implements GetRequestInterface
    * {@inheritdoc}
    */
   public function getUri(): string {
-    if (empty($this->getObjectType()) ||
-      empty($this->getObjectId())) {
-      throw new \Exception("The object type and/or Id must be set.");
-    }
     return "/sobjects/{$this->getObjectType()}/{$this->getObjectId()}";
   }
 
