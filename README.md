@@ -25,7 +25,7 @@ $config['rest_client']['api_version'] = ''
 
 ```
 // A SELECT request query with conditionals.
-$requestFactory = \Drupal::service('salesforce_rest.services.query.request_factory');
+$requestFactory = \Drupal::service('salesforce_rest.services.request.request_factory');
 $fuzzyRequest = $requestFactory->createFuzzyRequest();
 
 $fuzzyRequest->setType('User');
@@ -39,7 +39,7 @@ $fuzzyRequest->setConditions([
 $requestResponse = $fuzzyRequest->execute();
 
 // A SELECT request query using an Id.
-$requestFactory = \Drupal::service('salesforce_rest.services.query.request_factory');
+$requestFactory = \Drupal::service('salesforce_rest.services.request.request_factory');
 $selectRequest = $requestFactory->createSelectRequest();
 
 $selectRequest->setType('User');
@@ -49,7 +49,7 @@ $selectRequest->setFields(['Id']);
 $requestResponse = $selectRequest->execute();
 
 // An UPDATE request query using an Id.
-$requestFactory = \Drupal::service('salesforce_rest.services.query.request_factory');
+$requestFactory = \Drupal::service('salesforce_rest.services.request.request_factory');
 $updateRequest = $requestFactory->createUpdateRequest();
 
 $updateRequest->setType('User');
