@@ -8,6 +8,11 @@ use \Symfony\Component\PropertyAccess\PropertyAccess;
 final class Response implements ImmutableInterface {
 
   /**
+   * @var string
+   */
+  const INVALID_SESSION_ERROR_CODE = 'INVALID_SESSION_ID';
+
+  /**
    * @var \Symfony\Component\PropertyAccess\PropertyAccessorInterface
    */
   private $propertyAccessor;

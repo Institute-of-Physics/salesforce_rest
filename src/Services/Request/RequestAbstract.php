@@ -32,8 +32,7 @@ abstract class RequestAbstract {
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function execute(): Response {
-    $response = $this->restClient->request($this);
-    return new Response($response);
+    return $this->restClient->request($this);
   }
 
   /**

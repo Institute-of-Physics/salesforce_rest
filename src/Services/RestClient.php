@@ -7,13 +7,17 @@ use \Drupal\Core\Logger\LoggerChannelInterface;
 use \Drupal\salesforce_rest\Config\Config;
 use \Drupal\salesforce_rest\Services\Request\{
   RequestAbstract,
+  Response,
   Contracts\GetRequestInterface,
   Contracts\PostRequestInterface,
 };
 use \Drupal\salesforce_rest\Session\AccessToken;
 use \Symfony\Component\HttpKernel\Exception\HttpException;
-use \Symfony\Component\HttpFoundation\Response;
+use \Symfony\Component\HttpFoundation\Response as SymfonyResponse;
+use \GuzzleHttp\Exception\ClientException;
+use \Psr\Http\Message\ResponseInterface;
 use \GuzzleHttp\Client;
+use \GuzzleHttp\ClientInterface;
 
 class RestClient {
 
@@ -23,7 +27,7 @@ class RestClient {
   const API_ENDPOINT = '/services/data/v{api_version}';
 
   /**
-   * @var \GuzzleHttp\Client
+   * @var \GuzzleHttp\ClientInterface
    */
   private $client;
 
@@ -62,13 +66,15 @@ class RestClient {
     $this->config = $config->getConfig();
     $this->cache = $cache;
     $this->logger = $logger;
+    $this->accessToken = $this->getAccessToken();
+  }
 
-    if ($accessToken = $this->cache->get('access_token')) {
-      $this->accessToken = $accessToken->data;
-    } else {
-      $this->accessToken = $this->getAccessToken();
-      $this->cache->set('access_token', $this->accessToken);
-    }
+  /**
+   * @throws \GuzzleHttp\Exception\GuzzleException
+   */
+  private function regenerateAccessToken(): void {
+    $this->cache->delete('access_token');
+    $this->accessToken = $this->getAccessToken();
   }
 
   /**
@@ -77,6 +83,9 @@ class RestClient {
    */
   private function getAccessToken(): AccessToken {
     try {
+      if ($accessToken = $this->cache->get('access_token')) {
+        return $accessToken->data;
+      }
       $requestHeaders = [
         'Content-Type' => 'application/x-www-form-urlencoded',
       ];
@@ -96,17 +105,34 @@ class RestClient {
         'POST',
         '/services/oauth2/token'
       );
-      if (Response::HTTP_OK !== $response->getStatusCode()) {
+      if (SymfonyResponse::HTTP_OK !== $response->getStatusCode()) {
         throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
       }
-      return new AccessToken(
-        $response->getBody()->getContents()
-      );
+      $accessToken = new AccessToken($response->getBody()->getContents());
+      $this->cache->set('access_token', $accessToken);
+      return $accessToken;
     } catch (\Exception $e) {
       $this->logger
         ->critical($e->getMessage());
       throw $e;
     }
+  }
+
+  /**
+   * @param \Psr\Http\Message\ResponseInterface $response
+   *
+   * @return bool
+   * @throws \Exception
+   */
+  private function hasAccessTokenExpired(ResponseInterface $response): bool {
+    if (SymfonyResponse::HTTP_UNAUTHORIZED === $response->getStatusCode()) {
+      $response = new Response($response->getBody()->getContents());
+      if ($response->has('[0].errorCode') &&
+        Response::INVALID_SESSION_ERROR_CODE === $response->get('[0].errorCode')) {
+        return TRUE;
+      }
+    }
+    return FALSE;
   }
 
   /**
@@ -123,10 +149,10 @@ class RestClient {
   /**
    * @param \Drupal\salesforce_rest\Services\Request\RequestAbstract $request
    *
-   * @return string
+   * @return \Drupal\salesforce_rest\Services\Request\Response
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  public function request(RequestAbstract $request): string {
+  public function request(RequestAbstract $request): Response {
     try {
       $requestData = [];
       if ($request instanceof GetRequestInterface &&
@@ -143,14 +169,20 @@ class RestClient {
           $requestData
         );
       if (!in_array($response->getStatusCode(), [
-        Response::HTTP_OK,
-        Response::HTTP_CREATED,
-        Response::HTTP_NO_CONTENT
+        SymfonyResponse::HTTP_OK,
+        SymfonyResponse::HTTP_CREATED,
+        SymfonyResponse::HTTP_NO_CONTENT
       ])) {
         throw new HttpException($response->getStatusCode(), $response->getReasonPhrase());
       }
-      return $response->getBody()->getContents();
+      return new Response($response->getBody()->getContents());
     } catch (\Exception $e) {
+      if ($e instanceof ClientException) {
+        if ($this->hasAccessTokenExpired($e->getResponse())) {
+          $this->regenerateAccessToken();
+          return $this->retryRequest($request);
+        }
+      }
       $this->logger
         ->critical($e->getMessage());
       throw $e;
@@ -158,9 +190,26 @@ class RestClient {
   }
 
   /**
-   * @return \GuzzleHttp\Client
+   * @param \Drupal\salesforce_rest\Services\Request\RequestAbstract $request
+   *
+   * @return \Drupal\salesforce_rest\Services\Request\Response
+   * @throws \GuzzleHttp\Exception\GuzzleException
    */
-  private function getClient() {
+  private function retryRequest(RequestAbstract $request): Response {
+    static $retries = 0;
+    $retries++;
+    if ($retries > 3) {
+      throw new \Exception(
+        "A request cannot be retried more than three times."
+      );
+    }
+    return $this->request($request);
+  }
+
+  /**
+   * @return \GuzzleHttp\ClientInterface
+   */
+  private function getClient(): ClientInterface {
     if ($this->client) {
       return $this->client;
     }
