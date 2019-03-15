@@ -149,24 +149,33 @@ class RestClient {
   /**
    * @param \Drupal\salesforce_rest\Services\Request\RequestAbstract $request
    *
+   * @return array
+   */
+  private function getRequestData(RequestAbstract $request): array {
+    $requestData = [];
+    if ($request instanceof GetRequestInterface &&
+      $request->hasParams()) {
+      $requestData['query'] = $request->getParams();
+    } else if ($request instanceof PostRequestInterface &&
+      $request->hasBody()) {
+      $requestData['json'] = $request->getBody();
+    }
+    return $requestData;
+  }
+
+  /**
+   * @param \Drupal\salesforce_rest\Services\Request\RequestAbstract $request
+   *
    * @return \Drupal\salesforce_rest\Services\Request\Response
    * @throws \GuzzleHttp\Exception\GuzzleException
    */
   public function request(RequestAbstract $request): Response {
     try {
-      $requestData = [];
-      if ($request instanceof GetRequestInterface &&
-        $request->hasParams()) {
-        $requestData['query'] = $request->getParams();
-      } else if ($request instanceof PostRequestInterface &&
-        $request->hasBody()) {
-        $requestData['json'] = $request->getBody();
-      }
       $response = $this->getClient()
         ->request(
           $request->getMethod(),
           $this->getApiEndpoint() . $request->getUri(),
-          $requestData
+          $this->getRequestData($request)
         );
       if (!in_array($response->getStatusCode(), [
         SymfonyResponse::HTTP_OK,
