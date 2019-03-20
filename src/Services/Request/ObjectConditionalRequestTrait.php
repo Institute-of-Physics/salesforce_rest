@@ -21,7 +21,7 @@ trait ObjectConditionalRequestTrait {
    * @return array
    */
   public function getObjectConditions(): array {
-    return $this->objectConditions;
+    return $this->objectConditions ?? [];
   }
 
   /**
