@@ -36,8 +36,15 @@ final class Response implements ImmutableInterface {
   /**
    * @return \stdClass
    */
-  public function __toString():string {
+  public function __toString(): string {
     return json_encode($this->response) ?? '';
+  }
+
+  /**
+   * @return array|\stdClass
+   */
+  public function __toArray() {
+    return (array)$this->response;
   }
 
   /**
