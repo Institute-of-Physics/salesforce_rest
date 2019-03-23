@@ -31,10 +31,11 @@ trait ObjectConditionalRequestTrait {
    * @throws \Exception
    */
   public function setObjectConditions(array $objectConditions): self {
-    if (empty(array_intersect(
-      array_keys($objectConditions),
-      $this->validConditionalOperators
-    ))) {
+    if (!empty($objectConditions) &&
+      empty(array_intersect(
+        array_keys($objectConditions),
+        $this->validConditionalOperators
+      ))) {
       throw new \Exception(
         "The conditional operators must be " . implode(' OR ', $this->validConditionalOperators)
       );
