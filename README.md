@@ -48,6 +48,17 @@ $selectRequest->setFields(['Id']);
 
 $requestResponse = $selectRequest->execute();
 
+// A CREATE request query.
+$requestFactory = \Drupal::service('salesforce_rest.services.request.request_factory');
+$createRequest = $requestFactory->createCreateRequest();
+
+$createRequest->setType('User');
+$createRequest->setFieldValues([
+    'field' => 'value',
+]);
+
+$requestResponse = $createRequest->execute();
+
 // An UPDATE request query using an Id.
 $requestFactory = \Drupal::service('salesforce_rest.services.request.request_factory');
 $updateRequest = $requestFactory->createUpdateRequest();
