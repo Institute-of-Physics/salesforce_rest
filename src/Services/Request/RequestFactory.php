@@ -6,6 +6,7 @@ use \Drupal\salesforce_rest\Services\RestClient;
 use \Drupal\salesforce_rest\Services\Request\Types\{
   FuzzyRequest,
   SelectRequest,
+  CreateRequest,
   UpdateRequest,
 };
 
@@ -35,6 +36,13 @@ final class RequestFactory {
    */
   public function createSelectRequest(): SelectRequest {
     return SelectRequest::create($this->restClient);
+  }
+
+  /**
+   * @return \Drupal\salesforce_rest\Services\Request\Types\CreateRequest
+   */
+  public function createCreateRequest(): CreateRequest {
+    return CreateRequest::create($this->restClient);
   }
 
   /**
